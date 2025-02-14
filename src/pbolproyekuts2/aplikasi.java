@@ -21,56 +21,97 @@ public class aplikasi extends javax.swing.JFrame {
             new Thread(() -> {
                 for (int i = 0; i <= 100; i++) {
                     try {
-                        Thread.sleep(50); // Simulasi proses
+                        Thread.sleep(50); 
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
-                    loading.setValue(i); // Perbarui nilai progress bar
+                    loading.setValue(i); 
 
                 }
 
-                SwingUtilities.invokeLater(() -> {
+//                String user = "hr";
+//                String Pass = "banyu2005";
+//                String host = "localHost";
+//                String port = "1521";
+//                String db = "xe";
+                String ket = null;
+
+//                Connection conn = con;
+//
+//                try {
+//                    Class.forName("oracle.jdbc.driver.OracleDriver");
+//                } catch (ClassNotFoundException e) {
+//                    System.out.println("Driver tidak ditemukan");
+//                    System.out.println("message:" + e.getMessage());
+//                }
+                try {
+                    //con = (Connection) DriverManager.getConnection("jdbc:oracle:thin:@" + host + ":" + port + ":" + db, user, Pass);
+                    if (con != null) {
+                        String count = "SELECT COUNT(*) AS row_count FROM costumer";
+                        PreparedStatement countStmt = con.prepareStatement(count);
+                        ResultSet countRs = countStmt.executeQuery();
+                        int rowCount = 0;
+                        if (countRs.next()) {
+                            rowCount = countRs.getInt("row_count");
+                        }
+                        countRs.close();
+                        countStmt.close();
+                       
+                        if (rowCount != 0) {
+                            String query = "SELECT keterangan FROM costumer where user_id=(select count(*)from costumer)";
+                            PreparedStatement stmt = con.prepareStatement(query);
+                            ResultSet rs = stmt.executeQuery();
+
+                            if (rs.next()) {
+                                ket = rs.getString("keterangan");
+                                
+                            }
+
+                            rs.close();
+                            stmt.close();
+                        } else {
+                            ket = null;
+                        }
+
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println("Driver tidak ditemukan");
+                    System.out.println("message:" + e);
+                }
+                if ("Aktif".equals(ket)) {
+                    halPesanKamar obj = new halPesanKamar();
+                    obj.setConn(con);
+                    obj.setVisible(true);
+                    dispose();
+                } else if ("Tidak aktif".equals(ket)) {
+
+                    SwingUtilities.invokeLater(() -> {
+
+                        Opening obj = new Opening();
+                        obj.setCon(getConnection());
+                        obj.setVisible(true);
+                        dispose();
+
+                    });
+
+                } else {
                     Opening obj = new Opening();
                     obj.setCon(getConnection());
                     obj.setVisible(true);
                     dispose();
-                });
+                }
 
             }).start();
 
         } else {
             JOptionPane.showMessageDialog(null, "Gagal terhubung:" + JOptionPane.ERROR_MESSAGE);
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
     }
 
     public Connection getConnection() {
-        String host = "localhost";  // Pastikan menggunakan 'localhost' (huruf kecil)
+        String host = "localhost";  
         String port = "1521";
         String db = "xe";
         String user = "hr";
@@ -87,7 +128,7 @@ public class aplikasi extends javax.swing.JFrame {
             conn = DriverManager.getConnection("jdbc:oracle:thin:@" + host + ":" + port + ":" + db, user, pass);
         } catch (SQLException e) {
             System.out.println("Gagal terhubung ke database");
-            e.printStackTrace();  // Menampilkan detail error
+            e.printStackTrace();  
         }
 
         return conn;
@@ -104,6 +145,7 @@ public class aplikasi extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         loading = new javax.swing.JProgressBar();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,19 +164,30 @@ public class aplikasi extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 0, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 255, 255));
+        jLabel1.setText("yowweii.com");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(103, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(98, 98, 98))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(107, 107, 107)
-                .addComponent(loading, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addGap(120, 120, 120)
+                .addComponent(loading, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(166, Short.MAX_VALUE)
+                .addContainerGap(79, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(loading, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(112, 112, 112))
         );
@@ -187,6 +240,7 @@ public class aplikasi extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new aplikasi().setVisible(true);
             }
@@ -194,6 +248,7 @@ public class aplikasi extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar loading;
     // End of variables declaration//GEN-END:variables

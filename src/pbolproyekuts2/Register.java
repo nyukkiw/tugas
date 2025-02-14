@@ -356,6 +356,15 @@ public class Register extends javax.swing.JFrame {
 
         }
         try {
+            
+            
+            
+            
+            
+            
+            
+            
+            
             ps = con.prepareStatement("insert into costumer values(?,?,?,?,?,?,?,?,?)");
             ps.setInt(1, userTerbarukan);
             ps.setString(2, user);
@@ -365,7 +374,7 @@ public class Register extends javax.swing.JFrame {
             ps.setString(6, jenisKel);
             ps.setString(7, noHp);
             ps.setString(8, password);
-            ps.setString(9, "Aktif");
+            ps.setString(9, "Tidak aktif");
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data berhasil ditambah");
             dispose();

@@ -86,6 +86,11 @@ public class Login extends javax.swing.JFrame {
         cancel.setBackground(new java.awt.Color(255, 255, 255));
         cancel.setForeground(new java.awt.Color(0, 0, 0));
         cancel.setText("Cancel");
+        cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,31 +159,33 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_passActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
+        
         if (con == null) {
             JOptionPane.showMessageDialog(null, "Tidak dapat terhubung");
         } else {
+            
             String User = username.getText();
             String passWord = pass.getText();
-            String user = "hr";
-            String Pass = "banyu2005";
-            String host = "localHost";
-            String port = "1521";
-            String db = "xe";
+//            String user = "hr";
+//            String Pass = "banyu2005";
+//            String host = "localHost";
+//            String port = "1521";
+//            String db = "xe";
             String ket = null;
 
-            Connection conn = con;
-
+            // Connection conn = con;
+//            try {
+//                Class.forName("oracle.jdbc.driver.OracleDriver");
+//            } catch (ClassNotFoundException e) {
+//                System.out.println("Driver tidak ditemukan");
+//                System.out.println("message:" + e.getMessage());
+//            }
             try {
-                Class.forName("oracle.jdbc.driver.OracleDriver");
-            } catch (ClassNotFoundException e) {
-                System.out.println("Driver tidak ditemukan");
-                System.out.println("message:" + e.getMessage());
-            }
-            try {
-                conn = (Connection) DriverManager.getConnection("jdbc:oracle:thin:@" + host + ":" + port + ":" + db, user, Pass);
-                if (conn != null) {
-                    String query = "select user_id,keterangan from costumer where username=? and password=?";
-                    PreparedStatement stmt = conn.prepareStatement(query);
+                // conn = (Connection) DriverManager.getConnection("jdbc:oracle:thin:@" + host + ":" + port + ":" + db, user, Pass);
+                if (con != null) {
+                    
+                    String query = "select keterangan from costumer where username=? and password=?";
+                    PreparedStatement stmt = con.prepareStatement(query);
                     stmt.setString(1, User);
                     stmt.setString(2, passWord);
                     ResultSet rs = stmt.executeQuery();
@@ -192,24 +199,30 @@ public class Login extends javax.swing.JFrame {
                     rs.close();
                     stmt.close();
 
+                }else{
+                    JOptionPane.showMessageDialog(null, "Tidak dapat terhubung");
                 }
 
             } catch (SQLException e) {
                 System.out.println("Driver tidak ditemukan");
                 System.out.println("message:" + e);
-            } finally {
-                if (con != null) {
-                    try {
-                        con.close();
-                    } catch (SQLException e) {
-                        JOptionPane.showMessageDialog(null, "warning:" + e.getMessage());
-                    }
-                }
             }
 
-            if ("Aktif".equals(ket)) {
+            if ("Tidak aktif".equals(ket)) {
                 halPesanKamar obj = new halPesanKamar();
                 obj.setConn(con);
+    
+                PreparedStatement ps = null;
+
+                
+                try {
+                    ps = con.prepareStatement("update costumer set keterangan = 'Aktif' where user_id=(select count(*)from costumer)");
+                    ps.executeUpdate();
+                    con.commit();
+
+                } catch (SQLException ex) {
+                    System.out.println("message: " + ex.getMessage());
+                }
                 obj.setVisible(true);
                 this.dispose();
             } else {
@@ -220,6 +233,10 @@ public class Login extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_loginActionPerformed
+
+    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
+        dispose();
+    }//GEN-LAST:event_cancelActionPerformed
 
     /**
      * @param args the command line arguments

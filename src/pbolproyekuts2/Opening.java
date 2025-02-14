@@ -103,7 +103,7 @@ public class Opening extends javax.swing.JFrame {
             Login obj = new Login();
             obj.setCon(con);
             obj.setVisible(true);
-            this.dispose();
+           
         } else {
             JOptionPane.showMessageDialog(null, "Tidak dapat terhubung");
         }

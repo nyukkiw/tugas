@@ -58,6 +58,7 @@ public class halPesanKamar extends javax.swing.JFrame {
         pesan = new javax.swing.JButton();
         cancel = new javax.swing.JButton();
         nokamar = new javax.swing.JComboBox<>();
+        logout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,24 +106,35 @@ public class halPesanKamar extends javax.swing.JFrame {
         nokamar.setForeground(new java.awt.Color(0, 0, 0));
         nokamar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No kamar yang tersedia" }));
 
+        logout.setBackground(new java.awt.Color(255, 255, 255));
+        logout.setForeground(new java.awt.Color(0, 0, 0));
+        logout.setText("LogOut");
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lihat)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pesan)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cancel)
+                .addGap(14, 14, 14))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pilihkamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nokamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lihat)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pesan)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                        .addComponent(cancel))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pilihkamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nokamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap()
+                        .addComponent(logout)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,14 +148,16 @@ public class halPesanKamar extends javax.swing.JFrame {
                     .addComponent(lihat)
                     .addComponent(pesan)
                     .addComponent(cancel))
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addComponent(logout)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,7 +181,7 @@ public class halPesanKamar extends javax.swing.JFrame {
             obj.setVisible(true);
 
         }
-     
+
 
     }//GEN-LAST:event_lihatActionPerformed
 
@@ -184,19 +198,23 @@ public class halPesanKamar extends javax.swing.JFrame {
     private void pesanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesanActionPerformed
 
         String kamar = (String) nokamar.getSelectedItem();
-        for(Kamar list:kamarList){
-            if(list.getNomorKamar().equals(kamar)&&list.isTersedia()){
-            list.setTersedia(false);
-            JOptionPane.showMessageDialog(null, "Kamar berhasil dipesan");
-            transaksi obj=new transaksi();
-            
-            }else if(list.getNomorKamar().equals(kamar)&&!list.isTersedia()){
-            JOptionPane.showMessageDialog(null, "Kamar sudah tidak tersedia");
-            return;
+
+        for (Kamar list : kamarList) {
+
+            if (list.getNomorKamar().equals(kamar) && list.isTersedia()) {
+                list.setTersedia(false);
+
+                JOptionPane.showMessageDialog(null, "Kamar berhasil dipesan");
+                TransaksiBaru obj = new TransaksiBaru(kamar);
+                obj.setVisible(true);
+
+            } else if (list.getNomorKamar().equals(kamar) && !list.isTersedia()) {
+                JOptionPane.showMessageDialog(null, "Kamar sudah tidak tersedia");
+                break;
             }
         }
-       
-       
+
+
     }//GEN-LAST:event_pesanActionPerformed
 
     private void pilihkamarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pilihkamarActionPerformed
@@ -216,6 +234,27 @@ public class halPesanKamar extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_pilihkamarActionPerformed
+
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        con = conn;
+
+        try {
+            ps = conn.prepareStatement("update costumer set keterangan = 'Tidak aktif' where user_id=(select count(*)from costumer)");
+            ps.executeUpdate();
+            conn.commit();
+            Opening obj = new Opening();
+            obj.setCon(conn);
+            obj.setVisible(true);
+            dispose();
+        } catch (SQLException ex) {
+            System.out.println("message: " + ex.getMessage());
+        }
+
+
+    }//GEN-LAST:event_logoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -257,6 +296,7 @@ public class halPesanKamar extends javax.swing.JFrame {
     private javax.swing.JButton cancel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton lihat;
+    private javax.swing.JButton logout;
     private javax.swing.JComboBox<String> nokamar;
     private javax.swing.JButton pesan;
     private javax.swing.JComboBox<String> pilihkamar;
