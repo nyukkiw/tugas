@@ -226,6 +226,7 @@ public class Login extends javax.swing.JFrame {
                 obj.setVisible(true);
                 this.dispose();
             } else {
+                System.out.println("");
                 return;
             }
 
