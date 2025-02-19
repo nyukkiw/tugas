@@ -251,6 +251,7 @@ public class halPesanKamar extends javax.swing.JFrame {
             dispose();
         } catch (SQLException ex) {
             System.out.println("message: " + ex.getMessage());
+            System.out.println(" ");
         }
 
 
