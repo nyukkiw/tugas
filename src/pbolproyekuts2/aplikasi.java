@@ -128,6 +128,7 @@ public class aplikasi extends javax.swing.JFrame {
             conn = DriverManager.getConnection("jdbc:oracle:thin:@" + host + ":" + port + ":" + db, user, pass);
         } catch (SQLException e) {
             System.out.println("Gagal terhubung ke database");
+            System.out.println(" ");
             e.printStackTrace();  
         }
 
