@@ -316,6 +316,8 @@ public class TransaksiBaru extends javax.swing.JFrame {
         System.out.println("Kamar: " + kamar);
         System.out.println("Harga Kamar: " + hargaKamar);
         System.out.println("Lama Menginap: " + lamaMenginap);
+        System.out.println(" ");
+        
         
         if (lamaMenginap > 0) {
             int totalBiaya = (int) (lamaMenginap * hargaKamar);
